@@ -2,10 +2,12 @@
 import os
 import openpyxl
 import re
+import argparse
+from datetime import datetime
 
 inputFileCSV = r"D:\Working\Projects\Network\Regions orig.csv"
 inputFileXLSX = r"D:\Working\Projects\Network\Regions orig.xlsx"
-outFile = r"D:\Working\Projects\Network\Regions_parse_tmp.xlsx"
+outFile = r"D:\Working\Projects\Network\Regions_parse.xlsx"
 
 ip_pattern = re.compile('(\d+)\.(\d+)\.(\d+)\.(\d+)/\d+')
 
@@ -73,10 +75,19 @@ def write_data(outPath, title, data):
 
 
 def main():
+
+
+    startTime = datetime.now()
+    print(startTime.strftime('[*] Start time: %d.%m.%Y %H:%M:%S'))
+
     inWB = openpyxl.load_workbook(filename=inputFileXLSX)
     print(f'[+] Open {inputFileXLSX}')
     data = parser(inWB['Лист1'])
     write_data(outFile, 'Test', data)
+
+    endTime = datetime.now()
+    print('[*] Total elapsed time - {0} seconds'.format((endTime - startTime).seconds))
+    print(endTime.strftime('[*] End time: %d.%m.%Y %H:%M:%S'))
 
 if __name__ == '__main__':
     main()
