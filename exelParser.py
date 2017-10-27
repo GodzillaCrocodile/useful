@@ -5,11 +5,8 @@ import re
 import argparse
 from datetime import datetime
 
-inputFileCSV = r"D:\Working\Projects\Network\Regions orig.csv"
-inputFileXLSX = r"D:\Working\Projects\Network\Regions orig.xlsx"
-outFile = r"D:\Working\Projects\Network\Regions_parse.xlsx"
-
 ip_pattern = re.compile('(\d+)\.(\d+)\.(\d+)\.(\d+)/\d+')
+
 
 def iter_rows(ws):
     for row in ws.iter_rows():
@@ -38,7 +35,7 @@ def row_splitter(row):
         yield [ip, description]
 
 
-def parser(ws):
+def worker(ws):
     data = list()
     title = [cell.value for cell in ws[1]]
     rows = list(iter_rows(ws))
@@ -75,15 +72,30 @@ def write_data(outPath, title, data):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Exel parser')
 
+    parser.add_argument('-o', dest='outFile', action='store', help='Output file')
+    parser.add_argument('-f', dest='inFile', action='store', help='Input file')
+
+    args = parser.parse_args()
+    if not args.inFile:
+        print('[-] You must specify an existing path to the input file!')
+        exit(-1)
+    elif not os.path.exists(args.inFile):
+        print('[-] Input file %s does not exist!' % os.path.abspath(args.inFile))
+        exit(-1)
+    if not args.outFile:
+        print('[-] You must specify an existing path to the output folder!')
+        exit(-1)
 
     startTime = datetime.now()
     print(startTime.strftime('[*] Start time: %d.%m.%Y %H:%M:%S'))
 
-    inWB = openpyxl.load_workbook(filename=inputFileXLSX)
-    print(f'[+] Open {inputFileXLSX}')
-    data = parser(inWB['Лист1'])
-    write_data(outFile, 'Test', data)
+    inWB = openpyxl.load_workbook(filename=args.inFile)
+
+    print(f'[+] Open {args.inFile}')
+    data = worker(inWB['Лист1'])
+    write_data(args.outFile, 'Test', data)
 
     endTime = datetime.now()
     print('[*] Total elapsed time - {0} seconds'.format((endTime - startTime).seconds))
