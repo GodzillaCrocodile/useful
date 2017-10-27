@@ -1,11 +1,13 @@
 # 'EStroev'
 import os
 import openpyxl
+import re
 
 inputFileCSV = r"D:\Working\Projects\Network\Regions orig.csv"
 inputFileXLSX = r"D:\Working\Projects\Network\Regions orig.xlsx"
-outFile = r"D:\Working\Projects\Network\Regions_parse.xlsx"
+outFile = r"D:\Working\Projects\Network\Regions_parse_tmp.xlsx"
 
+ip_pattern = re.compile('(\d+)\.(\d+)\.(\d+)\.(\d+)/\d+')
 
 def iter_rows(ws):
     for row in ws.iter_rows():
@@ -20,6 +22,16 @@ def row_splitter(row):
             ip, description = net.split(' - ')
         else:
             ip = net
+        if ip:
+            if not ip[0].isdigit():
+                ip = None
+            else:
+                ip_re = ip_pattern.search(ip)
+                if ip_re:
+                    ip = ip_re.group()
+
+        if description:
+            description = description.strip()
 
         yield [ip, description]
 
@@ -29,15 +41,16 @@ def parser(ws):
     title = [cell.value for cell in ws[1]]
     rows = list(iter_rows(ws))
     for row in list(rows[1:]):
-        name, network_office_1, network_office_2 = row
-        if network_office_1:
-            for net in row_splitter(network_office_1):
-                ip_office_1, description_office_1 = net
-                data.append([name, ip_office_1, description_office_1])
-        if network_office_2:
-            for net in row_splitter(network_office_2):
-                ip_office_2, desciption_office_2 = net
-                data.append([name, ip_office_2, desciption_office_2])
+        if row:
+            name, network_office_1, network_office_2 = row
+            if network_office_1:
+                for net in row_splitter(network_office_1):
+                    ip_office_1, description_office_1 = net
+                    data.append([name, ip_office_1, description_office_1])
+            if network_office_2:
+                for net in row_splitter(network_office_2):
+                    ip_office_2, desciption_office_2 = net
+                    data.append([name, ip_office_2, desciption_office_2])
 
     return data
 
