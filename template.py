@@ -1,9 +1,11 @@
-# EStroev
+# 'EStroev'
 import argparse
 from datetime import datetime
+import os
 
 __author__ = "EStroev <jenya.stroev(at)gmail.com>"
 __email__ = "jenya.stroev@gmail.com"
+
 
 def main():
     parser = argparse.ArgumentParser(description='IP search in the RIPE.net database')
@@ -12,7 +14,7 @@ def main():
 
     args = parser.parse_args()
 
-	if not args.inPath:
+    if not args.inPath:
         print('[-] You must specify an existing input path!')
         exit(-1)
     elif not os.path.exists(args.inPath):
