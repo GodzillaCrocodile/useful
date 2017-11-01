@@ -13,7 +13,8 @@ def main():
     parser.add_argument('-f', dest='input_file', action='store', help='Input file with IP list for searching')
 
     args = parser.parse_args()
-
+    outFolder = os.path.dirname(os.path.abspath(args.outFile))
+    
     if not args.inPath:
         print('[-] You must specify an existing input path!')
         exit(-1)
@@ -27,7 +28,11 @@ def main():
         print(f'[-] Output folder {os.path.abspath(args.outFolder)} does not exist!')
         os.makedirs(args.outFolder)
         print(f'[+] Create output folder {args.outFolder}')
-
+    elif not os.path.exists(outFolder):
+        print(f'[-] Output folder {outFolder} does not exist!')
+        os.makedirs(outFolder)
+        print(f'[+] Create output folder {outFolder}')
+        
     startTime = datetime.now()
     print(startTime.strftime('[*] Start time: %d.%m.%Y %H:%M:%S'))
 
