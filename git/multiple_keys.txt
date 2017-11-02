@@ -1,0 +1,33 @@
+$ ssh-keygen -t rsa -C "your_email@youremail.com"
+
+~/.ssh/id_rsa_activehacker
+~/.ssh/id_rsa_jexchan
+
+$ ssh-add ~/.ssh/id_rsa_activehacker
+$ ssh-add ~/.ssh/id_rsa_jexchan
+
+Deleted all cahed keys
+$ ssh-add -D
+
+Check saved keys
+$ ssh-add -l
+
+~/.ssh/config
+
+#activehacker account
+Host github.com-activehacker
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa_activehacker
+
+#jexchan account
+Host github.com-jexchan
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa_jexchan
+
+$ git config user.name "jexchan"
+$ git config user.email "jexchan@gmail.com" 
+
+$ git config user.name "activehacker"
+$ git config user.email "jexlab@gmail.com" 
