@@ -18,8 +18,8 @@ HTTPS_PROXY = 'http://localhost:3130'
 COOKIE = {
     'cookies-accepted': 'accepted',
     'crowd.ripe.hint': 'true',
-    '_ga': 'GA1.2.1367709936.1503312845',
-    '_gid': 'GA1.2.226836294.1503312845'
+    '_ga': '',
+    '_gid': ''
 }
 
 PROXY = {
@@ -35,7 +35,7 @@ HEADERS = {
 
 
 
-KEY_WORDS = ['alfa', 'ALFA', 'Alfa-Bank']
+KEY_WORDS = ['First', 'Second', 'Third']
 
 
 def ripe_search(query, headers=HEADERS, cookies=COOKIE, proxies=PROXY):
@@ -107,13 +107,13 @@ def country_analyze(countries, ip, attributes):
         countries[attributes['country']] = [ip]
 
 
-def alfa_analyze(organizations, ip, attributes):
-    if re.search('alfa', attributes['netname'], re.IGNORECASE):
-        organizations['alfa'].append(ip)
-        return 'Alfa'
-    elif re.search('alfa', '; '.join(attributes['descriptions']), re.IGNORECASE):
-        organizations['alfa'].append(ip)
-        return 'Alfa'
+def org_analyze(organizations, ip, attributes):
+    if re.search('first', attributes['netname'], re.IGNORECASE):
+        organizations['first'].append(ip)
+        return 'First'
+    elif re.search('first', '; '.join(attributes['descriptions']), re.IGNORECASE):
+        organizations['first'].append(ip)
+        return 'First'
     else:
         organizations['other'].append(ip)
         return 'Other'
@@ -132,14 +132,14 @@ def city_analyze(cities, ip, attributes):
 
 
 def analyze(countries, cities, organizations):
-    # 1. Ru, Alfa, Moscow
-    first_list = list(set(countries['RU']) & set(cities['moscow']) & set(organizations['alfa']))
-    # 2. Ru, Alfa, Regions
-    second_list = list(set(countries['RU']) & set(cities['other']) & set(organizations['alfa']))
-    # 3. Ru, Alfa
-    third_list = list(set(countries['RU']) & set(organizations['alfa']))
-    # 4. Ru, Not Alfa
-    fourth_list = list(set(countries['RU']) - set(organizations['alfa']))
+    # 1. Ru, First, Moscow
+    first_list = list(set(countries['RU']) & set(cities['moscow']) & set(organizations['first']))
+    # 2. Ru, First, Regions
+    second_list = list(set(countries['RU']) & set(cities['other']) & set(organizations['first']))
+    # 3. Ru, First
+    third_list = list(set(countries['RU']) & set(organizations['first']))
+    # 4. Ru, Not First
+    fourth_list = list(set(countries['RU']) - set(organizations['first']))
     return first_list, second_list, third_list, fourth_list
 
 
@@ -197,7 +197,7 @@ def main():
 
     countries_dict = dict()
     organizations_dict = {
-        'alfa': list(),
+        'first': list(),
         'other': list()
     }
     cities_dict = {
@@ -230,7 +230,7 @@ def main():
 
         if args.analyse:
             country = country_analyze(countries=countries_dict, ip=ip, attributes=ip_attributes_dict)
-            organiation = alfa_analyze(organizations=organizations_dict, ip=ip, attributes=ip_attributes_dict)
+            organiation = org_analyze(organizations=organizations_dict, ip=ip, attributes=ip_attributes_dict)
             city = city_analyze(cities=cities_dict, ip=ip, attributes=ip_attributes_dict)
             all_data[ip]['city'] = city
 
@@ -244,14 +244,14 @@ def main():
 
     if args.analyse:
         first_list, second_list, third_list, fourth_list = analyze(countries=countries_dict, cities=cities_dict, organizations=organizations_dict)
-        with open(os.path.join(args.output_folder, 'alfa_ru_moscow.csv'), 'w') as alfa_ru_moscow_out_file:
-            alfa_ru_moscow_out_file.writelines('\n'.join(sorted(first_list)))
-        with open(os.path.join(args.output_folder, 'alfa_ru_regions.csv'), 'w') as alfa_ru_regions_out_file:
-            alfa_ru_regions_out_file.writelines('\n'.join(sorted(second_list)))
-        with open(os.path.join(args.output_folder, 'alfa_ru.csv'), 'w') as alfa_ru_out_file:
-            alfa_ru_out_file.writelines('\n'.join(sorted(third_list)))
-        with open(os.path.join(args.output_folder, 'other_ru.csv'), 'w') as other_ru_out_file:
-            other_ru_out_file.writelines('\n'.join(sorted(fourth_list)))
+        with open(os.path.join(args.output_folder, 'first.csv'), 'w') as outF:
+            outF.writelines('\n'.join(sorted(first_list)))
+        with open(os.path.join(args.output_folder, 'second.csv'), 'w') as outF:
+            outF.writelines('\n'.join(sorted(second_list)))
+        with open(os.path.join(args.output_folder, 'third.csv'), 'w') as outF:
+            outF.writelines('\n'.join(sorted(third_list)))
+        with open(os.path.join(args.output_folder, 'fourth.csv'), 'w') as outF:
+            outF.writelines('\n'.join(sorted(fourth_list)))
         analyzed_csv_writer(out_file=os.path.join(args.output_folder, 'all_analyzed.csv'), data=all_data)
 
         print('[+] Write alanysys data to %s' % args.output_folder)
