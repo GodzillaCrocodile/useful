@@ -1,0 +1,4 @@
+include /usr/share/nano/python.nanorc
+include /usr/share/nano/shell.nanorc
+set tabsize 4
+set tabstospaces

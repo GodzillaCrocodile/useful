@@ -1,0 +1,8 @@
+git config --global alias.pushall '!git remote | xargs -L1 git push --all'
+git config --global http.proxy http://localhost:3128
+git config --global https.proxy https://localhost:3128
+
+git config --global core.excludesfile ~/.gitignore_global
+
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com

@@ -1,0 +1,4 @@
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+alias python3='python3.6'
+eval $(thefuck --alias)
