@@ -1,0 +1,4 @@
+$ sudo nano /etc/wgetrc 
+http_proxy = http://user:pass@xxx.xxx.xxx.xxx:port/ 
+ftp_proxy = http://user:pass@xxx.xxx.xxx.xxx.port/ 
+use_proxy = on 
