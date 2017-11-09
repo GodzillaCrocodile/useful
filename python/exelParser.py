@@ -17,40 +17,81 @@ def row_splitter(row):
     for line in row.split('\n'):
         ip, description = None, None
         net = line.strip('_x000D_')
-        if len(net.split(' - ')) > 1:
+        if len(net.split(',')) > 1:
+            ip = net.split(',')
+        elif len(net.split(' - ')) > 1:
             ip, description = net.split(' - ')
         else:
             ip = net
         if ip:
-            if not ip[0].isdigit():
-                ip = None
-            else:
-                ip_re = ip_pattern.search(ip)
-                if ip_re:
-                    ip = ip_re.group()
+            if type(ip) == str:
+                if not ip[0].isdigit():
+                    ip = None
+                elif len(net.split(' - ')) > 1:
+                    ip, description = net.split(' - ')
+                else:
+                    ip_re = ip_pattern.search(ip)
+                    if ip_re:
+                        ip = ip_re.group()
 
-        if description:
-            description = description.strip()
+                if description:
+                    description = description.strip()
+                if ip:
+                    ip = ip.strip()
 
-        yield [ip, description]
+                yield [ip, description]
+            elif type(ip) == list:
+                for ipIter in ip:
+                    if ipIter:
+                        if len(ipIter.split(' - ')) > 1:
+                            ipIter, description = ipIter.split(' - ')
+                            if description:
+                                description = description.strip()
+                            if ipIter:
+                                ipIter = ipIter.strip()
+
+                            yield [ipIter, description]
+                        else:
+                            if description:
+                                description = description.strip()
+                            if ipIter:
+                                ipIter = ipIter.strip()
+
+                            yield [ipIter, description]
 
 
 def worker(ws):
+    # Regions and Holdings.xlsx
     data = list()
     title = [cell.value for cell in ws[1]]
     rows = list(iter_rows(ws))
     for row in list(rows[1:]):
         if row:
-            name, network_office_1, network_office_2 = row
-            if network_office_1:
-                for net in row_splitter(network_office_1):
-                    ip_office_1, description_office_1 = net
-                    data.append([name, ip_office_1, description_office_1])
-            if network_office_2:
-                for net in row_splitter(network_office_2):
-                    ip_office_2, desciption_office_2 = net
-                    data.append([name, ip_office_2, desciption_office_2])
+            name, networkOffice1, networkOffice2 = row
+            if networkOffice1:
+                for net in row_splitter(networkOffice1):
+                    ipOffice1, descriptionOffice1 = net
+                    data.append([name, ipOffice1, descriptionOffice1])
+            if networkOffice2:
+                for net in row_splitter(networkOffice2):
+                    ipOffice2, desciptionOffice2 = net
+                    data.append([name, ipOffice2, desciptionOffice2])
 
+    return data
+
+
+def worker2(ws):
+    # Подсети РО_1.xlsx
+    data = list()
+    title = [cell.value for cell in ws[1]]
+    rows = list(iter_rows(ws))
+    for row in list(rows[1:]):
+        if row:
+            name, network, timeDelta = row
+            if network:
+                for net in row_splitter(network):
+                    ip, description = net
+                    data.append([name, ip, description])
     return data
 
 
@@ -72,7 +113,7 @@ def write_data(outPath, title, data):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Exel parser')
+    parser = argparse.ArgumentParser(description='Excel parser')
 
     parser.add_argument('-o', dest='outFile', action='store', help='Output file')
     parser.add_argument('-f', dest='inFile', action='store', help='Input file')
@@ -94,7 +135,7 @@ def main():
     inWB = openpyxl.load_workbook(filename=args.inFile)
 
     print(f'[+] Open {args.inFile}')
-    data = worker(inWB['Лист1'])
+    data = worker2(inWB['Лист1'])
     write_data(args.outFile, 'Test', data)
 
     endTime = datetime.now()
