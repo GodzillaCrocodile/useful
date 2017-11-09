@@ -61,7 +61,6 @@ def row_splitter(row):
 
 
 def worker(ws):
-    # Regions and Holdings.xlsx
     data = list()
     title = [cell.value for cell in ws[1]]
     rows = list(iter_rows(ws))
@@ -81,7 +80,6 @@ def worker(ws):
 
 
 def worker2(ws):
-    # Подсети РО_1.xlsx
     data = list()
     title = [cell.value for cell in ws[1]]
     rows = list(iter_rows(ws))
