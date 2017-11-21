@@ -107,7 +107,7 @@ def csv_writer(out_file, data, ip_list):
         for ip in ip_list:
             csv_out_writer.writerow(
                 [
-                    ip, 
+                    ip,
                     data[ip]['inetnum'],
                     data[ip]['network'],
                     data[ip]['country'],
