@@ -7,6 +7,9 @@ import csv
 import os
 import argparse
 import re
+from ipaddress import summarize_address_range
+from ipaddress import IPv4Address
+
 
 __author__ = "EStroev <jenya.stroev(at)gmail.com>"
 __email__ = "jenya.stroev@gmail.com"
@@ -18,11 +21,6 @@ COOKIE = {
     '_gid': 'GA1.2.255152598.1511198866'
 }
 
-PROXY = {
-    'http': proxy,
-    'https': proxy
-}
-
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0',
     'Host': 'rest.db.ripe.net',
@@ -32,7 +30,21 @@ HEADERS = {
 KEY_WORDS = ['First', 'Second', 'Third']
 
 
-def ripe_search(query, headers=HEADERS, cookies=COOKIE, proxies=PROXY):
+def summarize(line):
+    if line:
+        firstAddr, lastAddr = line.split('-')
+        firstAddr = firstAddr.strip()
+        lastAddr = lastAddr.strip()
+        nets = [ipaddr for ipaddr in summarize_address_range(IPv4Address(firstAddr), IPv4Address(lastAddr))]
+        if len(nets) == 1:
+            return str(nets[0])
+        else:
+            return ';'.join(str(net) for net in nets)
+    else:
+        return None
+
+
+def ripe_search(query, proxies, headers=HEADERS, cookies=COOKIE):
     url = 'http://rest.db.ripe.net/search.xml?query-string=' + query + '&flags=no-filtering'
 
     r = requests.get(url, headers=headers, cookies=cookies, timeout=15, proxies=proxies)
@@ -82,18 +94,46 @@ def response_parser(response):
 def csv_writer(out_file, data, ip_list):
     with open(out_file, 'w', newline='') as csv_out:
         csv_out_writer = csv.writer(csv_out, delimiter=';')
-        csv_out_writer.writerow(['IP', 'Inetnum', 'Country', 'Netname', 'Descriptions'])
+        csv_out_writer.writerow(
+            [
+                'IP',
+                'Inetnum',
+                'Network',
+                'Country',
+                'Netname',
+                'Descriptions'
+            ]
+        )
         for ip in ip_list:
-            csv_out_writer.writerow([ip, data[ip]['inetnum'], data[ip]['country'], data[ip]['netname'], data[ip]['descriptions']])
+            csv_out_writer.writerow(
+                [
+                    ip, 
+                    data[ip]['inetnum'],
+                    data[ip]['network'],
+                    data[ip]['country'],
+                    data[ip]['netname'],
+                    data[ip]['descriptions']
+                ]
+            )
     print('\n[+] Write %s IP to %s' % (len(ip_list), out_file))
 
 
 def analyzed_csv_writer(out_file, data):
     with open(out_file, 'a', newline='') as csv_out:
         csv_out_writer = csv.writer(csv_out, delimiter=';')
-        csv_out_writer.writerow(['IP', 'Country', 'City'])
+        csv_out_writer.writerow(
+            [
+                'IP', 'Country', 'City'
+            ]
+        )
         for ip in data:
-            csv_out_writer.writerow([ip, data[ip]['country'], data[ip]['city']])
+            csv_out_writer.writerow(
+                [
+                    ip,
+                    data[ip]['country'],
+                    data[ip]['city']
+                ]
+            )
     print('\n[+] Write %s IP to %s' % (len(data), out_file))
 
 
@@ -153,8 +193,10 @@ def main():
 
     args = parser.parse_args()
 
-    global proxy
-    proxy = args.proxy
+    PROXY = {
+        'http': args.proxy,
+        'https': args.proxy
+    }
 
     if not args.output_folder and not args.terminal_print:
         print('[-] You must specify an existing path to the output folder or flag \'-p\' for print to console!')
@@ -211,7 +253,7 @@ def main():
     for index, ip in enumerate(ip_list, 1):
         ip = ip.strip()
         if ip not in all_data:
-            ripe_response = ripe_search(query=ip)
+            ripe_response = ripe_search(query=ip, proxies=PROXY)
             ip_attributes_dict = response_parser(response=ripe_response)
             if ip_attributes_dict is None:
                 print('[-] %s/%s %s' % (index, len(ip_list), ip))
@@ -219,6 +261,7 @@ def main():
             else:
                 all_data[ip] = {
                     'inetnum': ip_attributes_dict['inetnum'],
+                    'network': summarize(ip_attributes_dict['inetnum']),
                     'country': ip_attributes_dict['country'],
                     'netname': ip_attributes_dict['netname'],
                     'descriptions': '; '.join(ip_attributes_dict['descriptions']),
@@ -227,6 +270,7 @@ def main():
         else:
             ip_attributes_dict = {
                 'inetnum': all_data[ip]['inetnum'],
+                'network': all_data[ip]['network'],
                 'country': all_data[ip]['country'],
                 'netname': all_data[ip]['netname'],
                 'descriptions': all_data[ip]['descriptions']
