@@ -218,6 +218,7 @@ def main():
                 continue
             else:
                 all_data[ip] = {
+                    'inetnum': ip_attributes_dict['inetnum'],
                     'country': ip_attributes_dict['country'],
                     'netname': ip_attributes_dict['netname'],
                     'descriptions': '; '.join(ip_attributes_dict['descriptions']),
@@ -225,6 +226,7 @@ def main():
                 }
         else:
             ip_attributes_dict = {
+                'inetnum': all_data[ip]['inetnum'],
                 'country': all_data[ip]['country'],
                 'netname': all_data[ip]['netname'],
                 'descriptions': all_data[ip]['descriptions']
@@ -239,7 +241,7 @@ def main():
         print('[+] %s/%s %s' % (index, len_ip_list, ip))
 
         if args.terminal_print:
-            print('Country: %s\nNetName: %s\nDescriptions: %s\n\n' % (ip_attributes_dict['country'], ip_attributes_dict['netname'], '; '.join(ip_attributes_dict['descriptions'])))
+            print('Inetnum: %s\nCountry: %s\nNetName: %s\nDescriptions: %s\n\n' % (ip_attributes_dict['inetnum'], ip_attributes_dict['country'], ip_attributes_dict['netname'], '; '.join(ip_attributes_dict['descriptions'])))
 
     if args.output_folder:
         csv_writer(out_file=os.path.join(args.output_folder, 'all.csv'), data=all_data, ip_list=ip_list)
