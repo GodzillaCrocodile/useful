@@ -11,20 +11,16 @@ import re
 __author__ = "EStroev <jenya.stroev(at)gmail.com>"
 __email__ = "jenya.stroev@gmail.com"
 
-
-HTTP_PROXY = 'http://localhost:3130'
-HTTPS_PROXY = 'http://localhost:3130'
-
 COOKIE = {
     'cookies-accepted': 'accepted',
     'crowd.ripe.hint': 'true',
-    '_ga': '',
-    '_gid': ''
+    '_ga': 'GA1.2.1726447427.1511198866',
+    '_gid': 'GA1.2.255152598.1511198866'
 }
 
 PROXY = {
-    'http': HTTP_PROXY,
-    'https': HTTPS_PROXY
+    'http': proxy,
+    'https': proxy
 }
 
 HEADERS = {
@@ -32,8 +28,6 @@ HEADERS = {
     'Host': 'rest.db.ripe.net',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 }
-
-
 
 KEY_WORDS = ['First', 'Second', 'Third']
 
@@ -66,6 +60,7 @@ def response_parser(response):
     attributes = root.findall('objects/object/attributes/attribute')
 
     attributes_dict = {
+        'inetnum': '',
         'country': '',
         'netname': '',
         'descriptions': list()
@@ -73,6 +68,8 @@ def response_parser(response):
 
     descriptions = list()
     for attribute_iter in attributes:
+        if attribute_iter.get('name') == 'inetnum':
+            attributes_dict['inetnum'] = attribute_iter.get('value')
         if attribute_iter.get('name') == 'country':
             attributes_dict['country'] = attribute_iter.get('value')
         if attribute_iter.get('name') == 'netname':
@@ -85,9 +82,9 @@ def response_parser(response):
 def csv_writer(out_file, data, ip_list):
     with open(out_file, 'w', newline='') as csv_out:
         csv_out_writer = csv.writer(csv_out, delimiter=';')
-        csv_out_writer.writerow(['IP', 'Country', 'Netname', 'Descriptions'])
+        csv_out_writer.writerow(['IP', 'Inetnum', 'Country', 'Netname', 'Descriptions'])
         for ip in ip_list:
-            csv_out_writer.writerow([ip, data[ip]['country'], data[ip]['netname'], data[ip]['descriptions']])
+            csv_out_writer.writerow([ip, data[ip]['inetnum'], data[ip]['country'], data[ip]['netname'], data[ip]['descriptions']])
     print('\n[+] Write %s IP to %s' % (len(ip_list), out_file))
 
 
@@ -145,15 +142,19 @@ def analyze(countries, cities, organizations):
 
 def main():
     parser = argparse.ArgumentParser(description='IP search in the RIPE.net database')
-    parser.add_argument('-p', dest='terminal_print', action='store_true', help='Print to console')
+    parser.add_argument('-v', dest='terminal_print', action='store_true', help='Print to console')
     parser.add_argument('-o', dest='output_folder', action='store', help='Output folder for results')
     parser.add_argument('-q', dest='query', action='store', help='Search query for single IP')
     parser.add_argument('-Q', dest='list_query', action='store_true', help='Search query for IP list')
     parser.add_argument('-f', dest='input_file', action='store', help='Input file with IP list for searching')
     parser.add_argument('-a', dest='analyse', action='store_true', help='IP analysis')
     parser.add_argument('-u', dest='unique', action='store_true', help='Only unique IP')
+    parser.add_argument('-p', dest='proxy', action='store', help='Proxy')
 
     args = parser.parse_args()
+
+    global proxy
+    proxy = args.proxy
 
     if not args.output_folder and not args.terminal_print:
         print('[-] You must specify an existing path to the output folder or flag \'-p\' for print to console!')
@@ -184,7 +185,8 @@ def main():
                 ip_list = list(set(file_in.read().split('\n')))  # Only unique
             else:
                 ip_list = file_in.read().split('\n')
-            ip_list.remove('')  # Delete empty line
+            if '' in ip_list:
+                ip_list.remove('')  # Delete empty line
         print('[+] Open %s and read %d IP (%d unique)\n' % (args.input_file, len(ip_list), len(set(ip_list))))
     else:
         ip_list = [args.query]
@@ -254,7 +256,7 @@ def main():
             outF.writelines('\n'.join(sorted(fourth_list)))
         analyzed_csv_writer(out_file=os.path.join(args.output_folder, 'all_analyzed.csv'), data=all_data)
 
-        print('[+] Write alanysys data to %s' % args.output_folder)
+        print('[+] Write analyzed data to %s' % args.output_folder)
 
     print("\n--- %s seconds ---" % (time.time() - start_time))
 
