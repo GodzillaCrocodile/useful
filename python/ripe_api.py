@@ -78,7 +78,6 @@ def response_parser(response):
         'descriptions': list()
     }
 
-    descriptions = list()
     for attribute_iter in attributes:
         if attribute_iter.get('name') == 'inetnum':
             attributes_dict['inetnum'] = attribute_iter.get('value')
@@ -148,9 +147,9 @@ def org_analyze(organizations, ip, attributes):
     if re.search('first', attributes['netname'], re.IGNORECASE):
         organizations['first'].append(ip)
         return 'First'
-    elif re.search('first', '; '.join(attributes['descriptions']), re.IGNORECASE):
-        organizations['first'].append(ip)
-        return 'First'
+    elif re.search('second', '; '.join(attributes['descriptions']), re.IGNORECASE):
+        organizations['second'].append(ip)
+        return 'Second'
     else:
         organizations['other'].append(ip)
         return 'Other'
@@ -177,7 +176,10 @@ def analyze(countries, cities, organizations):
     third_list = list(set(countries['RU']) & set(organizations['first']))
     # 4. Ru, Not First
     fourth_list = list(set(countries['RU']) - set(organizations['first']))
-    return first_list, second_list, third_list, fourth_list
+    # 1. Ru, Second
+    fifth_list = list(set(countries['RU']) & set(organizations['second']))
+
+    return first_list, second_list, third_list, fourth_list, fifth_list
 
 
 def main():
@@ -242,6 +244,7 @@ def main():
     countries_dict = dict()
     organizations_dict = {
         'first': list(),
+        'second': list(),
         'other': list()
     }
     cities_dict = {
@@ -291,7 +294,7 @@ def main():
         csv_writer(out_file=os.path.join(args.output_folder, 'all.csv'), data=all_data, ip_list=ip_list)
 
     if args.analyse:
-        first_list, second_list, third_list, fourth_list = analyze(countries=countries_dict, cities=cities_dict, organizations=organizations_dict)
+        first_list, second_list, third_list, fourth_list, fifth_list = analyze(countries=countries_dict, cities=cities_dict, organizations=organizations_dict)
         with open(os.path.join(args.output_folder, 'first.csv'), 'w') as outF:
             outF.writelines('\n'.join(sorted(first_list)))
         with open(os.path.join(args.output_folder, 'second.csv'), 'w') as outF:
@@ -300,6 +303,8 @@ def main():
             outF.writelines('\n'.join(sorted(third_list)))
         with open(os.path.join(args.output_folder, 'fourth.csv'), 'w') as outF:
             outF.writelines('\n'.join(sorted(fourth_list)))
+        with open(os.path.join(args.output_folder, 'fourth.csv'), 'w') as outF:
+            outF.writelines('\n'.join(sorted(fifth_list)))
         analyzed_csv_writer(out_file=os.path.join(args.output_folder, 'all_analyzed.csv'), data=all_data)
 
         print('[+] Write analyzed data to %s' % args.output_folder)
