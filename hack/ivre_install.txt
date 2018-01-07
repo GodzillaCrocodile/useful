@@ -1,0 +1,45 @@
+apt-get install python-pip python-dev mongodb tesseract-ocr geoip-bin geoip-database geoip-database-extra python-pymongo python-crypto apache2 dokuwiki python-pil
+pip install ivre
+service mongodb start
+ivre scancli --init
+ivre ipinfo --init
+ivre ipdata --init
+ivre runscansagentdb --init
+
+ivre ipdata --download
+ivre ipdata --import-all --dont-feed-ipdata-cols
+
+sudo apt-get install gsfonts-x11 fonts-arphic-uming
+cd /tmp/ && wget https://bitbucket.org`curl -s https://bitbucket.org/ariya/phantomjs/downloads | grep -E -o '/ariya/phantomjs/downloads/phantomjs-[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}-linux-x86_64.tar.bz2' | head -n 1` && tar xjf phantomjs-* && sudo mv `ls | grep 'phantomjs-' | head -n 1`/bin/phantomjs /usr/bin/ && cd `ls | grep 'phantomjs-' | head -n 1` && sudo mkdir /usr/share/phantomjs && sudo mv examples/ /usr/share/phantomjs && cd
+sudo ln -s /usr/bin/phantomjs /usr/local/bin/phantomjs
+sudo ln -s /usr/bin/phantomjs /usr/local/share/phantomjs
+
+sudo wget https://raw.githubusercontent.com/cea-sec/ivre/e2a23c8ca8d24112cfc78eb6d7e62e91c77f5034/docker/client/screenshot.js -O /usr/local/bin/screenshot.js
+sudo wget https://raw.githubusercontent.com/cea-sec/ivre/c3b0c61eb3af5fd919c6e3f99cd2713c6cd5eb08/docker/client/http-screenshot.nse -O /usr/share/nmap/scripts/http-screenshot.nse
+sudo chmod +x /usr/local/bin/screenshot.js
+
+su -
+cd /var/www/html
+rm index.html
+ln -s /usr/local/share/ivre/web/static/* .
+cd /usr/lib/cgi-bin
+ln -s /usr/local/share/ivre/web/cgi-bin/* .
+cd /var/lib/dokuwiki/data/pages
+ln -s /usr/local/share/ivre/dokuwiki/doc
+cd /var/lib/dokuwiki/data/media
+ln -s /usr/local/share/ivre/dokuwiki/media/logo.png
+ln -s /usr/local/share/ivre/dokuwiki/media/doc
+cd /usr/share/dokuwiki
+patch -p0 < /usr/local/share/ivre/dokuwiki/backlinks.patch
+cd /etc/apache2/mods-enabled
+for m in cgi rewrite ; do [ -L $m.load ] || ln -s ../mods-available/$m.load ; done
+cd /usr/local/share/ivre/web/cgi-bin
+sed -i 's/^\(\s*\)#Rewrite/\1Rewrite/' /etc/dokuwiki/apache.conf
+service apache2 start
+a2enmod cgi
+service apache2 reload
+CTRL+D
+
+sudo service mongodb start
+sudo service apache2 start
+sudo nmap --script-update

