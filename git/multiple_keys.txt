@@ -1,33 +1,42 @@
-$ ssh-keygen -t rsa -C "your_email@youremail.com"
+0. Check or deleted cached keys
+0.1. Deleted all cached keys
+    $ ssh-add -D
+0.2. Check saved keys
+    $ ssh-add -l
+1. Creating a New SSH Key
+ssh-keygen -t rsa -b 4096 -C “your_email@example.com”
+    a. id_rsa_personal
+    b. id_rsa_work
+3. Registering your new SSH Keys
+3.1. eval "$(ssh-agent -s)"
+3.2. ssh-add ~/.ssh/id_rsa_personal
+3.3. ssh-add ~/.ssh/id_rsa_work
+4. Add your SSH Keys to GitHub.com
+4.1. pbcopy < ~/.ssh/id_rsa_personal.pub
+4.2. pbcopy < ~/.ssh/id_rsa_work.pub
+5. Create a Git Config File
+touch ~/.ssh/config
+    Host me.github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_rsa_personal
+    
+    Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_rsa
+6. Create a Git username
+    $ git config user.name "me"
+    $ git config user.email "me@gmail.com" 
 
-~/.ssh/id_rsa_activehacker
-~/.ssh/id_rsa_jexchan
-
-$ ssh-add ~/.ssh/id_rsa_activehacker
-$ ssh-add ~/.ssh/id_rsa_jexchan
-
-Deleted all cahed keys
-$ ssh-add -D
-
-Check saved keys
-$ ssh-add -l
-
-~/.ssh/config
-
-#activehacker account
-Host github.com-activehacker
-	HostName github.com
-	User git
-	IdentityFile ~/.ssh/id_rsa_activehacker
-
-#jexchan account
-Host github.com-jexchan
-	HostName github.com
-	User git
-	IdentityFile ~/.ssh/id_rsa_jexchan
-
-$ git config user.name "jexchan"
-$ git config user.email "jexchan@gmail.com" 
-
-$ git config user.name "activehacker"
-$ git config user.email "jexlab@gmail.com" 
+    $ git config user.name "me"
+    $ git config user.email "me@work.com" 
+7. Cloning Projects
+7.1. uses standard SSH key
+git clone git@github.com:CDRussell/SurvivingPresenters.git
+7.2. uses personal SSH key
+git clone git@me.github.com:CDRussell/SurvivingPresenters.git
