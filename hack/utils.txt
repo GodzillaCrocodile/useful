@@ -266,6 +266,9 @@ Some new SSH algorithms
     ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@ip
     ssh-dss user@ip
 
+Zmap & Zgrab
+	zmap 172.16.128.0/17 -r 10000 -p 4786 -o - | /root/go/src/github.com/zmap/zgrab/zgrab -timeout=10 -port=4786 -data probe.txt -output-file=banners.json
+
 https://github.com/byt3bl33d3r/CrackMapExec/wiki/Installation
 
 https://www.coresecurity.com/corelabs-research/open-source-tools/impacket

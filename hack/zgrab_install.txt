@@ -1,0 +1,9 @@
+apt-get install zmap
+wget https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.5.3.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+go version
+export https_proxy=https://arcbot:3128 
+export http_proxy=http://arcbot:3128
+go get github.com/zmap/zgrab
+go build github.com/zmap/zgrab
