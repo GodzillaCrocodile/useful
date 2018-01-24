@@ -6,3 +6,6 @@ git config --global core.excludesfile ~/.gitignore_global
 
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
+
+git config credential.helper store
+git config --global credential.helper 'cache --timeout 43200'

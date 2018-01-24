@@ -60,6 +60,11 @@ def ip2long(ip):
 def long2ip(long):
     return socket.inet_ntoa(struct.pack('!L', long))
 
+
+def networkToSubnetworks(network, prefixlen_diff=2):
+    return list(ip_network(network).subnets(prefixlen_diff=prefixlen_diff))
+
+
 data = '''92.39.108.148 - 92.39.108.151'''
 for net in summarize(data):
     print(net)

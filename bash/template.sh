@@ -10,8 +10,13 @@ timing () {
 echo -en "${LGREEN}$(timing) seconds${NC}\n"
 
 if [[ $# -eq 0 ]] ; then
-    echo 'You must specify a date!'
+    echo "No arguments supplied"
     exit 0
+fi
+
+if [ -z "$1" ]
+  then
+    echo "No argument supplied"
 fi
 
 start=$(date +%s)
