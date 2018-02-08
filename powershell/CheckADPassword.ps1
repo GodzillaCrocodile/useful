@@ -19,7 +19,8 @@ Function Test-ADAuthentication {
 $section = "search" 
 import-module activedirectory 
 $domobj = get-addomain 
-$domain = $domobj.dnsroot # you can also specify another domain using $domain 
+#$domain = $domobj.dnsroot # you can also specify another domain using $domain 
+$domains = (domain1.test.net, domain2.test.net)
  
 # import user data 
 $data = import-csv $UsersCsv 
@@ -29,21 +30,23 @@ ForEach($rank in $data) {
 	$samaccountname = $rank.SamAccountName 
 	$password = $rank.hash 
 	if ($samaccountname -ne "") {
-		if ($samaccountname -NotMatch ";") {
-			if (Test-ADAuthentication "$domain\$samaccountname" "$password") { 
-    			write-host "$samaccountname/$password >> CREDENTIALS VALID" -foregroundcolor "green" 
-			} else { 
-				write-host "$samaccountname/$password >> CREDENTIALS INVALID" -foregroundcolor "red" 
-			} 
-		} else {
-			($samaccountname -split ";") | ForEach {
-				if (Test-ADAuthentication "$domain\$_" "$password") {
-					write-host "$_/$password >> CREDENTIALS VALID" -foregroundcolor "green" 
-				} else {
-					write-host "$_/$password >> CREDENTIALS INVALID" -foregroundcolor "red" 
+		ForEach ($domain in $domais) {
+			if ($samaccountname -NotMatch ";") {
+				if (Test-ADAuthentication "$domain\$samaccountname" "$password") { 
+	    			write-host "$samaccountname/$password >> CREDENTIALS VALID" -foregroundcolor "green" 
+				} else { 
+					write-host "$samaccountname/$password >> CREDENTIALS INVALID" -foregroundcolor "red" 
+				} 
+			} else {
+				($samaccountname -split ";") | ForEach {
+					if (Test-ADAuthentication "$domain\$_" "$password") {
+						write-host "$_/$password >> CREDENTIALS VALID" -foregroundcolor "green" 
+					} else {
+						write-host "$_/$password >> CREDENTIALS INVALID" -foregroundcolor "red" 
+					}
 				}
+				
 			}
-			
 		}
 	}
 }
