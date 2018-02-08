@@ -1,0 +1,37 @@
+dsquery * -filter "(objectCategory=Computer)"
+–attr name operatingSystemVersion
+
+> set type=all
+> _ldap._tcp.dc._msdcs.DOMAIN_NAME
+
+Get-ADComputer -Filter *
+Get-ADComputer -LDAPFilter "(name=*laptop*)" -SearchBase "CN=Computers,DC=Fabrikam,DC=com"
+
+Get-ADComputer -Filter 'Name -like "Fabrikam*"' -Properties IPv4Address | FT Name,DNSHostName,IPv4Address -A
+Get-ADComputer "Fabrikam-SRV1" -Properties *
+Get-ADComputer -Filter * -SearchBase "DC=MyOtherDomain,DC=com" -Server "MyOtherDomain.com"
+
+Several objects print
+	($result.SamAccountName | Out-String).Trim()
+	$result.DisplayName-Join ';'
+	
+Last Change Password
+	$d = [DateTime]::Today.AddDays(-90); Get-ADComputer -Filter 'PasswordLastSet -ge $d' -Properties PasswordLastSet | FT Name,PasswordLastSet
+
+All hosts
+	Moscow
+		Get-ADComputer -Filter * -Properties DNSHostName | FT DNSHostName -A > moscow_hosts.csv
+	Regions
+		Get-ADComputer -Filter * -Properties DNSHostName -SearchBase "DC=test,DC=example,DC=net" -Server "domain" | FT DNSHostName -A > domain_hosts.csv
+
+Get user info from email
+	Get-ADUser -Filter "EmailAddress -eq 'user@domain.ru'" -Properties DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber 
+
+Get user info from email and export to csv
+	Get-ADUser -Filter "EmailAddress -eq 'user@domain.ru'" -Properties DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber | Select-Object DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber | Export-Csv out.csv -NoType -Encoding Unicode
+
+Get user info from csv with emails
+	Import-csv -Path input.csv -delimiter "," | ForEach { Get-ADUser -Filter "EmailAddress -eq '$($_.email)'" -Properties DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber }
+
+Get user info from csv with emails and export to csv
+	Import-csv -Path input.csv -delimiter "," | ForEach { Get-ADUser -Filter "EmailAddress -eq '$($_.email)'" -Properties DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber } | Select-Object DisplayName, EmailAddress, SamAccountName, Department, Title, telephoneNumber | Export-Csv out.csv -NoType -Encoding Unicode

@@ -1,0 +1,17 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[branch "master"]
+[remote "origin"]
+	url = ssh://git@host:6522/user/project.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[remote "origin-github"]
+	url = https://github.com/user/project.git
+	fetch = +refs/heads/*:refs/remotes/origin-github/*
+[branch "master"]
+	remote = origin-github
+	merge = refs/heads/master
