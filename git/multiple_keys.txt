@@ -15,20 +15,22 @@ ssh-keygen -t rsa -b 4096 -C “your_email@example.com”
 4.1. pbcopy < ~/.ssh/id_rsa_personal.pub
 4.2. pbcopy < ~/.ssh/id_rsa_work.pub
 5. Create a Git Config File
+
 touch ~/.ssh/config
-    Host me.github.com
+    Host github.com-personal
     HostName github.com
     PreferredAuthentications publickey
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_rsa_personal
     
-    Host github.com
+    Host github.com-work
     HostName github.com
     PreferredAuthentications publickey
     AddKeysToAgent yes
     UseKeychain yes
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile ~/.ssh/id_rsa_work
+
 6. Create a Git username
     $ git config user.name "me"
     $ git config user.email "me@gmail.com" 
@@ -36,7 +38,10 @@ touch ~/.ssh/config
     $ git config user.name "me"
     $ git config user.email "me@work.com" 
 7. Cloning Projects
+
 7.1. uses standard SSH key
-git clone git@github.com:CDRussell/SurvivingPresenters.git
+git clone git@github.com-work:CDRussell/SurvivingPresenters.git
+git remote add origin-work git@github.com-work:CDRussell/SurvivingPresenters.git
 7.2. uses personal SSH key
-git clone git@me.github.com:CDRussell/SurvivingPresenters.git
+git clone git@github.com-personal:CDRussell/SurvivingPresenters.git
+git remote add origin-personal git@github.com-personal:CDRussell/SurvivingPresenters.git
