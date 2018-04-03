@@ -19,6 +19,7 @@ SQLmap
 		sqlmap -r request.txt -p param
 
 	sqlmap -u url/searhc.php/?id=1 --dbms
+    sqlmap -u http://url/search/ -D <bd_name> --tables
 
 Wi-Fi
 	MacBook
