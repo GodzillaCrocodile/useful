@@ -75,6 +75,7 @@ def response_parser(response):
         'inetnum': '',
         'country': '',
         'netname': '',
+        'org-names': list(),
         'descriptions': list()
     }
 
@@ -85,6 +86,8 @@ def response_parser(response):
             attributes_dict['country'] = attribute_iter.get('value')
         if attribute_iter.get('name') == 'netname':
             attributes_dict['netname'] = attribute_iter.get('value')
+        if attribute_iter.get('name') == 'org-name':
+            attributes_dict['org-names'].append(attribute_iter.get('value'))
         if attribute_iter.get('name') == 'descr':
             attributes_dict['descriptions'].append(attribute_iter.get('value'))
     return attributes_dict
@@ -100,6 +103,7 @@ def csv_writer(out_file, data, ip_list):
                 'Network',
                 'Country',
                 'Netname',
+                'Org-Names',
                 'Descriptions'
             ]
         )
@@ -111,6 +115,7 @@ def csv_writer(out_file, data, ip_list):
                     data[ip]['network'],
                     data[ip]['country'],
                     data[ip]['netname'],
+                    data[ip]['org-names'],
                     data[ip]['descriptions']
                 ]
             )
