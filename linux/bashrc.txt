@@ -2,3 +2,9 @@ alias pbcopy='xclip -selection clipboard'
 alias pbpaste='xclip -selection clipboard -o'
 alias python3='python3.6'
 eval $(thefuck --alias)
+export VISUAL="/usr/bin/nano"
+export EDITOR="$VISUAL"
+# if this is interactive shell, then bind hh to Ctrl-r (for Vi mode check doc)
+#if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hh \C-j"'; fi
+bind '"\C-r": "\C-ahh -- \C-j"'
+
