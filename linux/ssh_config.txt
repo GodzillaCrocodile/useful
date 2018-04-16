@@ -1,0 +1,39 @@
+1. Config
+	Host kali
+	Hostname 192.168.1.135
+	User root
+	Port 22
+	AddKeysToAgent yes
+	UseKeychain yes
+	IdentityFile ~/.ssh/id_rsa_kali
+
+	Host github.com-user1
+	Hostname github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa_github_user1
+	AddKeysToAgent yes
+	UseKeychain yes
+
+	Host github.com-user2
+	Hostname github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa_github_user2
+	AddKeysToAgent yes
+	UseKeychain yes
+
+2. Keygen
+	ssh-keygen -t rsa -b 4096 -c "comment"
+
+3. Copy public keys to remote server
+	ssh-copy-id -i ~/.ssh/id_rsa.pub admin@server
+	ssh-copy-id -i ~/.ssh/id_rsa.pub root@server
+
+4. Add keys to ssh-agent
+	eval "$(ssh-agent -s)"
+	ssh-add -K ~/.ssh/id_rsa
+
+5. List keys
+	ssh-add -l
+
+6. Delete all the keys
+	ssh-add -D
