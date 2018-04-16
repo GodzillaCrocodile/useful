@@ -8,6 +8,16 @@ OSINT
 	Zone Transfer with DIG
 		dig axfr domain-name-here.com @nameserver
 		nslookup -> set type=any -> ls -d blah.com
+		Nslookup server; ls -d servername
+		nslookup ls -d
+
+		A (address) — Maps a host name to an IP address
+		SOA (Start of Authority) — Identifies the DNS server responsible for the domain information
+		CNAME (canonical name) — Provides additional names or aliases for the address record
+		MX (mail exchange) — Identifies the mail server for the domain
+		SRV (service) — Identifies services such as directory services
+		PTR (pointer) — Maps IP addresses to host names
+		NS (name server) — Identifies other name servers for the domain
 
 	Email
 		git clone https://github.com/killswitch-GUI/SimplyEmail.git
@@ -24,6 +34,10 @@ OSINT
 		User-Agent: Mozilla/5.0
 		Referrer: meh-domain
 		<enter>
+
+		Nc -nvv -o output.txt server 80 < nudge.txt
+		finger –l @target.example.com finger 0@ip
+		openssl s_client –quiet -connect www.example.com:443
 
 Domain permutations
 	https://github.com/netevert/dnsmorph
@@ -53,6 +67,10 @@ Domain Reconn
 	https://mxtoolbox.com/
 	https://statonline.ru/domains?search
 	https://portal.bgpmon.net/firsttimelogin.php
+	https://yougetsignsl.com
+
+	theharvester
+	dnsenum
 
 Domain subbrute
 	https://github.com/TheRook/subbrute
@@ -125,17 +143,37 @@ Wi-Fi
 		airmon-ng check kill
 		airmon-ng start wlan0
 		airodump-ng wlan0mon
-		airodump-ng -c [channel] --bssid [bssid] -w "/Users/Jenya/Google Диск/Pentest/ФЦТ/Data/Wi-Fi" wlan0mon
+		airodump-ng -c [channel] --bssid [bssid] -w "File.txt" wlan0mon
 		aireplay-ng -0 2 -a [router bssid] -c [client bssid] mon0
 			-0 - deauth mode
 			2 - number of packets
 		aircrack-ng -a2 -b [router bssid] -w [path to wordlist] /root/Desktop/*.cap
 
+		aireplay-ng --arpreplay -b 00:11:24:A4:44:AF -h 00:1E:C2:B7:95:D9 ath0
+		aircrack-ng -z -b 00:11:24:A4:44:AF savefile.cap
+		airodump-ng -c 9 --bssid 00:14:6C:7E:40:80 -w psk ath0
+		aireplay-ng -0 1 -a 00:14:6C:7E:40:80 -c 00:0F:B5:FD:FB:C2 ath0
+		aircrack-ng -w password.lst -b 00:14:6C:7E:40:80 psk*.cap
+
 	WPS
 		wash -i wlan0mon
 		reaver -i wlan0mon -b [bssid] -vv
 			or reaver -i wlan0mon -b {BSSID of router} -c {router channel} -vvv -K 1 -f
+			or reawer -i mon0 -c 1 -b mac -vv -S --pin=pin
+		pixiewps -e -a -S
+		airodump-ng –wps –uptime wlan0mon
 	
+	Settings
+		iw reg set BZ
+		ifconfig wlan0 hw ether aa:bb:cc:dd:ee
+		macchanger -r wlan0
+		macchanger -m aa:bb:cc:dd:ee wlan0
+		iwconfig wlan0 txpower 30
+		
+		airmon-ng -wps
+		SB = USB method, ETHER = Ethernet, LAB = Label, DISP = Display, EXTNFC = External NFC, INTNFC = Internal NFC, NFCINTF = NFC Interface, PBC = Push
+		airodump-ng –wps –uptime wlan0mon
+
 	KRACK
 		https://github.com/vanhoefm/krackattacks-scripts
 			apt-get install libnl-3-dev libnl-genl-3-dev pkg-config libssl-dev net-tools git sysfsutils python-scapy python-pycryptodome
@@ -207,6 +245,9 @@ Masscan
 
 	masscan -p3306,27017,27018,1433,1434,1521,5432,5433 10.0.0.0/24 --open-only --wait -0 -oL masscan_db
 
+Ncat scan
+	Ncat nc -v -z -w2 192.168.1.1 1-140
+
 IVRE
     ivre runscans --file/--net --output XMLFork
     ivre scan2db -r folder
@@ -254,7 +295,9 @@ SMB
 
 Null session
 	net use \\TARGET\IPC$ "" /u:""
+	net use \\192.168.202.33\IPC$ "" /u:»"  null session (tcp 139/445)
 	net view \\ip
+	reg query \\10.219.1.207\HKLM\SOFTWARE\MICROSOFT\ Windows\CurrentVersion\Run
 	netusers /h \\ip
 	smbclient -L //192.168.99.131
 
@@ -466,6 +509,11 @@ Attack VPN Services
 	ike-scan -A TARGET-IP
 	ike-scan -A TARGET-IP --id=myid -P TARGET-IP-key
 
+	filetype:pcf
+	./ike-scan vpn.elec0ne.com
+	nmap -sU -p 500
+	ikeprobe.exe vpn.elec0ne.com
+
 IKE Aggressive Mode PSK Cracking
 	Identify VPN Servers
 		./udp-protocol-scanner.pl -p ike SUBNET/24
@@ -476,6 +524,21 @@ IKE Aggressive Mode PSK Cracking
 	Use psk-crack to crack the hash
 		psk-crack hash-file.txt
 
+Web
+	Index of /admin”	
+	“Index of /password”
+	“Index of /mail”
+	“Index of /” +banques +filetype:xls (for France)
+	“Index of /” +passwd
+	“Index of /” password.txt
+	Index of /admin”
+	“Index of /password”
+	“Index of /mail”
+	“Index of /” +banques +filetype:xls (for France)
+	“Index of /” +passwd
+	“Index of /” password.txt
+		inurl:exchange inurl:finduser inurl:root
+	type=hidden name=price
 https://github.com/byt3bl33d3r/CrackMapExec/wiki/Installation
 
 https://www.coresecurity.com/corelabs-research/open-source-tools/impacket

