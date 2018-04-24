@@ -1,0 +1,1 @@
+pip install --proxy https://localhost:3128 --trusted-host pypi.python.org requests

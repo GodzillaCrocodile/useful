@@ -3,12 +3,10 @@
 	email = user@email.com
 [core]
 	excludesfile = C:\\Users\\user\\.gitignore
-[alias]
-	pushall = '!git
 [http]
 	proxy = http://host:3128
-	sslVerify = false
 [https]
-	proxy = https://host:3128
+    proxy = https://host:3128
+	sslVerify = false
 [alias]
         pushall = !git remote | xargs -L1 git push --all

@@ -1,3 +1,10 @@
 for file in parsed_parsed_2018-01-16_ns*; do mv -i "${file}" "${file/parsed_parsed/parsed}"; done
 
 cat ../test.txt | xargs -P 4 -I {} -p nmap -F {} -oN {}.txt | cat ../test.txt | xargs -P 4 -I {} nmap -F {} -oN {}.txt
+
+cat > users.txt << EOF
+user1
+user2
+EOF
+
+cat users.txt | xargs -I {} ./md5crypt.sh {}

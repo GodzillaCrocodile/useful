@@ -1,4 +1,4 @@
-origin  ssh://git@arcbot.moscow.alfaintra.net:6522/EStroev/kasperskyTIAnalyser.git (fetch)
-origin  ssh://git@arcbot.moscow.alfaintra.net:6522/EStroev/kasperskyTIAnalyser.git (push)
-origin-github   https://github.com/GodzillaCrocodile/kasperskyTIAnalyser.git (fetch)
-origin-github   https://github.com/GodzillaCrocodile/kasperskyTIAnalyser.git (push)
+origin  ssh://git@server:6522/User/project.git (fetch)
+origin  ssh://git@server:6522/User/project.git (push)
+origin-github   https://github.com/User/project.git (fetch)
+origin-github   https://github.com/User/project.git (push)
